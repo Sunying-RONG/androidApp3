@@ -13,13 +13,18 @@ import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
-import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
     Map<String, String> event_list = new HashMap<String, String>();
-    String selectedDate;
+
+    Calendar c = Calendar.getInstance();
+    int day = c.get(Calendar.DAY_OF_MONTH);
+    int month = c.get(Calendar.MONTH) + 1;
+    int year = c.get(Calendar.YEAR);
+    String selectedDate = "" + year + month + day;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,11 +33,12 @@ public class MainActivity extends AppCompatActivity {
 
         CalendarView calendarView = (CalendarView) findViewById(R.id.calendarView);
         final TextView eventDisplay = (TextView) findViewById(R.id.event_display);
-        eventDisplay.setText("No event");
+        eventDisplay.setText(getEvent(selectedDate));
 
         calendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
             @Override
             public void onSelectedDayChange(CalendarView calendarView, int year, int month, int day) {
+                month++;
                 selectedDate = "" + year + month + day;
                 String event = getEvent(selectedDate);
                 eventDisplay.setText(event);
@@ -95,5 +101,4 @@ public class MainActivity extends AppCompatActivity {
             }
         }));
     }
-
 }
