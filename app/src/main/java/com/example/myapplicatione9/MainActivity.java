@@ -3,7 +3,6 @@ package com.example.myapplicatione9;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,12 +30,6 @@ public class MainActivity extends AppCompatActivity {
         final TextView eventDisplay = (TextView) findViewById(R.id.event_display);
         eventDisplay.setText("No event");
 
-//        Calendar c = Calendar.getInstance();
-//        int day = c.get(Calendar.DAY_OF_MONTH);
-//        int month = c.get(Calendar.MONTH);
-//        int year = c.get(Calendar.YEAR);
-//        String date = day + "/" + (month+1) + "/" + year;
-
         calendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
             @Override
             public void onSelectedDayChange(CalendarView calendarView, int year, int month, int day) {
@@ -58,7 +51,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void deleteCalendarEvent(View view) {
-
+        if (event_list.containsKey(selectedDate)) {
+            event_list.remove(selectedDate);
+            TextView eventDisplay = (TextView) findViewById(R.id.event_display);
+            eventDisplay.setText(getEvent(selectedDate));
+        }
     }
 
     public void addCalendarEvent(View view) {
@@ -79,13 +76,14 @@ public class MainActivity extends AppCompatActivity {
         popupWindow.showAtLocation(view, Gravity.CENTER, 0, 0);
 
         // pre populate former event
-        EditText inputView = (EditText) findViewById(R.id.event_input);
+        final EditText inputView = (EditText) findViewById(R.id.event_input);
         if (!formerEvent.equals("No event")) {
             inputView.setText(formerEvent);
         }
 
 //      dismiss popup window by clicking cancel button
         Button buttonOk = popupView.findViewById(R.id.ok);
+        final TextView eventDisplay = (TextView) findViewById(R.id.event_display);
         buttonOk.setOnClickListener((new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -93,6 +91,7 @@ public class MainActivity extends AppCompatActivity {
                 String input = inputView.getText().toString();
                 event_list.put(selectedDate, input);
                 popupWindow.dismiss();
+                eventDisplay.setText(getEvent(selectedDate));
             }
         }));
     }
